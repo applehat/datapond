@@ -1,0 +1,23 @@
+{
+  "name": "datapond",
+  "version": "0.0.1",
+  "description": "A questionable way of storing and fetching JSON documents on the filesystem",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/applehat/datapond.git"
+  },
+  "author": "applehat",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/applehat/datapond/issues"
+  },
+  "homepage": "https://github.com/applehat/datapond#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "groq-js": "^0.3.0-beta.2"
+  }
+}
