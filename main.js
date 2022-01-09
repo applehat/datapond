@@ -88,7 +88,7 @@ app.post('/documents', async (req, res) => {
     res.send({error: `Please provide a _type for the document.`})
     return 
   }
-  const newDocument = { _id: id, ...body}
+  const newDocument = { ...body, _id: id }
   dataStore.push(newDocument)
   writeDataStore()
   res.send({success: `Document with id ${id} was created.`, document: newDocument})
