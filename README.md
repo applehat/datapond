@@ -1,4 +1,4 @@
-# DataPond
+# DataPond💦
 A questionable way of storing and fetching JSON documents on the filesystem.
 
 ### Why?
@@ -14,6 +14,8 @@ This is a proof of concept. It has no authentication. It's not meant to be used 
 It (badly) replicates the concept of the Content Lake that is used by [Sanity.io](https://www.sanity.io/docs/datastore).
 
 # Endpoints
+
+For slightly better documentation, and a nice way of testing, you can import `postman.json` into Postman and use the collection.
 
 ## [GET] `/documents`
 Request documents from the DataPond using GROQ queries.
