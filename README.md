@@ -13,7 +13,7 @@ This is a proof of concept. It has no authentication. It's not meant to be used 
 
 It (badly) replicates the concept of the Content Lake that is used by [Sanity.io](https://www.sanity.io/docs/datastore).
 
-# Endpoints
+# Endpoints🔌
 
 For slightly better documentation, and a nice way of testing, you can import `postman.json` into Postman and use the collection.
 
@@ -46,12 +46,12 @@ Note: Does not allow `_type` or `_id` to be mutated.
 Delete a document from the DataPond by id
 
 Will delete the document with the given `id` if it exists.
-# Running
+# Running💻
 `npm i`
 
 `node main.js`
 
-# Notes
+# Notes📃
 Please don't use this. 
 
 There are infinitely better options -- this was just a quick (and kinda dirty) backend exclusively written to fufill my own desires to do something with `groq-js`.
