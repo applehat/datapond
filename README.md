@@ -50,3 +50,16 @@ Will delete the document with the given `id` if it exists.
 `npm i`
 
 `node main.js`
+
+# Notes
+Please don't use this. 
+
+There are infinitely better options -- this was just a quick (and kinda dirty) backend exclusively written to fufill my own desires to do something with `groq-js`.
+
+The code is not great. 
+
+This is not best practices.
+
+This is not even great API design.
+
+Just, don't use this.
