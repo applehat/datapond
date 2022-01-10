@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/applehat/datapond#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.2",
     "groq-js": "^0.3.0",
     "nanoid": "^3.1.30"

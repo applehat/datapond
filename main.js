@@ -2,6 +2,7 @@ import express from 'express'
 import * as fs from 'fs'
 import groq from 'groq-js'
 import {nanoid} from 'nanoid'
+import cors from 'cors'
 
 // make sure the datastore file exists on launch
 try {
@@ -55,6 +56,7 @@ const cleanId = () => {
 const app = express()
 const port = 3008 // you so 2000 and late...
 
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
