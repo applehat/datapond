@@ -49,7 +49,7 @@ Will delete the document with the given `id` if it exists.
 # Running💻
 `npm i`
 
-`node main.js`
+`npm start`
 
 # Notes📃
 Please don't use this. 
