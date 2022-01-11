@@ -55,7 +55,7 @@ Delete a document from the DataPond by id
 
 Will delete the document with the given `id` if it exists.
 
-# Known Issues
+# Known Issues👷
 
 - Currently there is no way to limit the fields retrieved from documents using the `/documents` endpoint. You can use `/query` if you need more advanced filtering.
 
