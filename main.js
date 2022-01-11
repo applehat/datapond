@@ -95,8 +95,8 @@ app.get('/query', async (req, res) => {
 app.get('/documents', async (req, res) => {
   console.log('Request for documents made')
   let query = ""
-  const base = `*[_type=="item"]`
-  const fields = `_id, name, description, complete, count`
+  const type = req.query.type || 'item'
+  const base = `*[_type=="${type}"]`
   let response = {}
 
   // Determine total documents
@@ -110,11 +110,11 @@ app.get('/documents', async (req, res) => {
     const start = (page - 1) * perPage
     const end = start + perPage - 1
     // Build the query
-    query = `${base}[${start}..${end}]{${fields}}`
+    query = `${base}[${start}..${end}]`
     console.log(page, perPage, start, end, query)
     response = {page, perPage, query, ...response}
   } else {
-    query = `${base}{${fields}}`
+    query = `${base}`
   }
   
   const result = await parseQuery(query)

@@ -25,14 +25,13 @@ Request documents from the DataPond using GROQ queries.
 |query|`*[_type=="item"][0..5]{name}`|A GROQ Query|
 
 ## [GET] `/documents`
-Request documents of type `item`.
+Request documents from the DataPond.
 
 |Param|Example|Description|
 |---|---|---|
+|type|`item`|The type of document to request. Defaults to `item`|
 |page|`1`|The page of items you want. Defaults to `1`|
 |perPage|`10`|The number of items you want per page. Defaults to `10`. Only works if page is explicitly set.|
-
-If no params are passed at all, the API will return all documents with the type `item`.
 
 ## [POST] `/documents`
 
@@ -55,6 +54,11 @@ Note: Does not allow `_type` or `_id` to be mutated.
 Delete a document from the DataPond by id
 
 Will delete the document with the given `id` if it exists.
+
+# Known Issues
+
+- Currently there is no way to limit the fields retrieved from documents using the `/documents` endpoint. You can use `/query` if you need more advanced filtering.
+
 # Running💻
 `npm i`
 
