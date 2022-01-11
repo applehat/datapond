@@ -30,7 +30,7 @@ Request documents from the DataPond.
 |Param|Example|Description|
 |---|---|---|
 |type|`item`|The type of document to request. Defaults to `item`|
-|page|`1`|The page of items you want. Defaults to `1`|
+|page|`1`|The page of items you want.|
 |perPage|`10`|The number of items you want per page. Defaults to `10`. Only works if page is explicitly set.|
 
 ## [POST] `/documents`
