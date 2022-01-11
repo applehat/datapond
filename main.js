@@ -10,10 +10,10 @@ try {
 } catch (err) {
   // If we don't have a dataset, lets build a simple one we can query against
   const defaultData = [
-    {_type: 'item', _id: nanoid(), name: 'Milk', description: 'Whole'},
-    {_type: 'item', _id: nanoid(), name: 'Milk', description: '2% Fat'},
-    {_type: 'item', _id: nanoid(), name: 'Tomatoes', description: 'Green cherry tomatoes'},
-    {_type: 'item', _id: nanoid(), name: 'Tomatoes', description: 'Red cherry tomatoes'},
+    {_type: 'item', _id: nanoid(), name: 'Milk', description: 'Whole', count: 1, complete: false},
+    {_type: 'item', _id: nanoid(), name: 'Milk', description: '2% Fat', count: 2, complete: true},
+    {_type: 'item', _id: nanoid(), name: 'Tomatoes', description: 'Green cherry tomatoes', count: 1, complete: false},
+    {_type: 'item', _id: nanoid(), name: 'Tomatoes', description: 'Red cherry tomatoes', count: 4, complete: false},
     {_type: 'other', _id: nanoid(), note: 'This is a different document type'},
   ]
   fs.writeFileSync('./dataStore.json', JSON.stringify(defaultData, null, 2))
@@ -60,13 +60,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
-
-app.get('/documents', async (req, res) => {
-  const {query} = req.query
-  if (!query) {
-    res.send({error: 'Please provide a query.'})
-    return
-  }
+const parseQuery = async (query) => {
   try {
     // parse the GROQ query
     const tree = groq.parse(query)
@@ -74,9 +68,56 @@ app.get('/documents', async (req, res) => {
     const value = await groq.evaluate(tree, {dataset: dataStore})
     // get the results
     const result = await value.get()
-    res.send({result})
+    return result
   } catch (err) {
-    res.send({error: err})
+    console.error(err)
+    return {error: err}
+  }
+}
+
+app.get('/documents', async (req, res) => {
+  let query = req.query.query
+  if (!query) {
+    // If we don't have a query passed, work like a more standard API
+    // by building a query from the request params
+    const base = `*[_type=="item"]`
+    const fields = `_id, name, description, complete, count`
+    let response = {}
+
+    // Determine total documents
+    const total = await parseQuery(`count(${base})`)
+    response.total = total
+
+    if (req.query.page) {
+
+      const perPage = req.query.perPage || 10
+      const page = parseInt(req.query.page) || 1
+      const start = (page - 1) * perPage
+      const end = start + perPage - 1
+      // Build the query
+      query = `${base}[${start}..${end}]{${fields}}`
+      
+      response = {page, perPage, query, ...response}
+    } else {
+      query = `${base}{${fields}}`
+    }
+    
+    const result = await parseQuery(query)
+    if (result.error) {
+      res.send({error: err})
+      return
+    }
+    response.result = result;
+    res.send(response)
+  
+  } else {
+    // We have a query. Just parse it and respond
+    const result = await parseQuery(query)
+    if (result.error) {
+      res.send({error: err})
+      return
+    }
+    res.send({result})
   }
 })
 
