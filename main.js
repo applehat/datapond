@@ -76,6 +76,7 @@ const parseQuery = async (query) => {
 }
 
 app.get('/documents', async (req, res) => {
+  console.log('Request for documents made')
   let query = req.query.query
   if (!query) {
     // If we don't have a query passed, work like a more standard API
@@ -90,13 +91,13 @@ app.get('/documents', async (req, res) => {
 
     if (req.query.page) {
 
-      const perPage = req.query.perPage || 10
+      const perPage = parseInt(req.query.perPage) || 10
       const page = parseInt(req.query.page) || 1
       const start = (page - 1) * perPage
       const end = start + perPage - 1
       // Build the query
       query = `${base}[${start}..${end}]{${fields}}`
-      
+      console.log(page, perPage, start, end, query)
       response = {page, perPage, query, ...response}
     } else {
       query = `${base}{${fields}}`
@@ -122,6 +123,7 @@ app.get('/documents', async (req, res) => {
 })
 
 app.post('/documents', async (req, res) => {
+  console.log('New document creation called')
   const id = cleanId()
   const {body} = req
   if (Object.keys(body).length === 0) {
@@ -139,6 +141,7 @@ app.post('/documents', async (req, res) => {
 })
 
 app.patch('/documents/:id', async (req, res) => {
+  console.log('Document update called')
   const id = req.params.id
   const {body} = req
   const find = dataStore.findIndex((doc) => doc._id === id)
@@ -162,6 +165,7 @@ app.patch('/documents/:id', async (req, res) => {
 })
 
 app.delete('/documents/:id', async (req, res) => {
+  console.log('Document deletion called')
   const id = req.params.id
   const find = dataStore.findIndex((doc) => doc._id === id)
   if (find === -1) {
