@@ -75,51 +75,55 @@ const parseQuery = async (query) => {
   }
 }
 
+app.get('/query', async (req, res) => {
+  const query = req.query.query
+  if (!query) {
+    res.status(400).send({error: 'No query provided'})
+    return
+  }
+  console.log(`Query Made: ${query}`)
+  // We have a query. Just parse it and respond
+  const result = await parseQuery(query)
+  if (result.error) {
+    res.send({error: result.error})
+    return
+  }
+  res.send({result})
+
+})
+
 app.get('/documents', async (req, res) => {
   console.log('Request for documents made')
-  let query = req.query.query
-  if (!query) {
-    // If we don't have a query passed, work like a more standard API
-    // by building a query from the request params
-    const base = `*[_type=="item"]`
-    const fields = `_id, name, description, complete, count`
-    let response = {}
+  let query = ""
+  const base = `*[_type=="item"]`
+  const fields = `_id, name, description, complete, count`
+  let response = {}
 
-    // Determine total documents
-    const total = await parseQuery(`count(${base})`)
-    response.total = total
+  // Determine total documents
+  const total = await parseQuery(`count(${base})`)
+  response.total = total
 
-    if (req.query.page) {
+  if (req.query.page) {
 
-      const perPage = parseInt(req.query.perPage) || 10
-      const page = parseInt(req.query.page) || 1
-      const start = (page - 1) * perPage
-      const end = start + perPage - 1
-      // Build the query
-      query = `${base}[${start}..${end}]{${fields}}`
-      console.log(page, perPage, start, end, query)
-      response = {page, perPage, query, ...response}
-    } else {
-      query = `${base}{${fields}}`
-    }
-    
-    const result = await parseQuery(query)
-    if (result.error) {
-      res.send({error: err})
-      return
-    }
-    response.result = result;
-    res.send(response)
-  
+    const perPage = parseInt(req.query.perPage) || 10
+    const page = parseInt(req.query.page) || 1
+    const start = (page - 1) * perPage
+    const end = start + perPage - 1
+    // Build the query
+    query = `${base}[${start}..${end}]{${fields}}`
+    console.log(page, perPage, start, end, query)
+    response = {page, perPage, query, ...response}
   } else {
-    // We have a query. Just parse it and respond
-    const result = await parseQuery(query)
-    if (result.error) {
-      res.send({error: err})
-      return
-    }
-    res.send({result})
+    query = `${base}{${fields}}`
   }
+  
+  const result = await parseQuery(query)
+  if (result.error) {
+    res.send({error: err})
+    return
+  }
+  response.result = result;
+  res.send(response)
 })
 
 app.post('/documents', async (req, res) => {

@@ -17,13 +17,22 @@ It (badly) replicates the concept of the Content Lake that is used by [Sanity.io
 
 For slightly better documentation, and a nice way of testing, you can import `postman.json` into Postman and use the collection.
 
-## [GET] `/documents`
+## [GET] `/query`
 Request documents from the DataPond using GROQ queries.
-
 
 |Param|Example|Description|
 |---|---|---|
-|query|*[_type=="item"]|A GROQ Query|
+|query|`*[_type=="item"][0..5]{name}`|A GROQ Query|
+
+## [GET] `/documents`
+Request documents of type `item`.
+
+|Param|Example|Description|
+|---|---|---|
+|page|`1`|The page of items you want. Defaults to `1`|
+|perPage|`10`|The number of items you want per page. Defaults to `10`. Only works if page is explicitly set.|
+
+If no params are passed at all, the API will return all documents with the type `item`.
 
 ## [POST] `/documents`
 
