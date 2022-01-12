@@ -4,7 +4,7 @@ import groq from 'groq-js'
 import {nanoid} from 'nanoid'
 import cors from 'cors'
 import config from './config.js'
-import generateDefaultData from './defaultData.js'
+import generateDefaultData from './helpers/defaultData.js'
 
 // make sure the datastore file exists on launch
 try {
@@ -100,7 +100,6 @@ app.get('/documents', async (req, res) => {
   response.total = total
 
   if (req.query.page) {
-
     const perPage = parseInt(req.query.perPage) || 10
     const page = parseInt(req.query.page) || 1
     const start = (page - 1) * perPage
