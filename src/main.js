@@ -3,24 +3,20 @@ import * as fs from 'fs'
 import groq from 'groq-js'
 import {nanoid} from 'nanoid'
 import cors from 'cors'
+import config from './config.js'
+import generateDefaultData from './helpers/defaultData.js'
 
 // make sure the datastore file exists on launch
 try {
-  fs.statSync('./dataStore.json')
+  fs.statSync(config.dataStore)
 } catch (err) {
   // If we don't have a dataset, lets build a simple one we can query against
-  const defaultData = [
-    {_type: 'item', _id: nanoid(), name: 'Milk', description: 'Whole', count: 1, complete: false},
-    {_type: 'item', _id: nanoid(), name: 'Milk', description: '2% Fat', count: 2, complete: true},
-    {_type: 'item', _id: nanoid(), name: 'Tomatoes', description: 'Green cherry tomatoes', count: 1, complete: false},
-    {_type: 'item', _id: nanoid(), name: 'Tomatoes', description: 'Red cherry tomatoes', count: 4, complete: false},
-    {_type: 'other', _id: nanoid(), note: 'This is a different document type'},
-  ]
-  fs.writeFileSync('./dataStore.json', JSON.stringify(defaultData, null, 2))
+  const defaultData = generateDefaultData()
+  fs.writeFileSync(config.dataStore, JSON.stringify(defaultData, null, 2))
 }
 
 // trust we never make mistakes
-const dataStore = JSON.parse(fs.readFileSync('./dataStore.json', 'utf8'))
+const dataStore = JSON.parse(fs.readFileSync(config.dataStore, 'utf8'))
 
 /**
  * Write the dataStore to the file system
@@ -28,7 +24,7 @@ const dataStore = JSON.parse(fs.readFileSync('./dataStore.json', 'utf8'))
 const writeDataStore = () => {
   console.log(`Saving dataStore to disk`)
   try {
-    fs.writeFile('./dataStore.json', JSON.stringify(dataStore, null, 2), (err) => {
+    fs.writeFile(config.dataStore, JSON.stringify(dataStore, null, 2), (err) => {
       if (err) {
         console.error(err)
       }
@@ -54,7 +50,7 @@ const cleanId = () => {
 }
 
 const app = express()
-const port = 3008 // you so 2000 and late...
+const port = config.port || 3008 // you so 2000 and late...
 
 app.use(cors())
 app.use(express.json())
@@ -104,7 +100,6 @@ app.get('/documents', async (req, res) => {
   response.total = total
 
   if (req.query.page) {
-
     const perPage = parseInt(req.query.perPage) || 10
     const page = parseInt(req.query.page) || 1
     const start = (page - 1) * perPage
